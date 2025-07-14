@@ -59,5 +59,6 @@ Each collection includes:
 
 ## ✍️ Author
 
-Made with 💻 and 🧪 by **Hashem** — Embedded Systems & QA Engineer  
+Created by [**Hashem Mohammed**](https://www.linkedin.com/in/hashem-al-hazzaa-032183183/) at his father shop — Embedded Systems & QA Engineer
+
 Feel free to use or fork for learning or interview prep!
