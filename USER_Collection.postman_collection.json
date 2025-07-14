@@ -1,0 +1,1028 @@
+{
+	"info": {
+		"_postman_id": "672fe82a-4f74-4cc4-a20d-331ad40ef069",
+		"name": "USER Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40960772"
+	},
+	"item": [
+		{
+			"name": "Retrieve All USERS",
+			"item": [
+				{
+					"name": "GET users (no Token)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Status Code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than 1 second\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"pm.test(\"Response matches schema\", function () {\r",
+									"    const schema = {\r",
+									"        type: 'array',\r",
+									"        items: {\r",
+									"            type: 'object',\r",
+									"            properties: {\r",
+									"                id: { type: 'integer' },\r",
+									"                name: { type: 'string' },\r",
+									"                email: { type: 'string' },\r",
+									"                gender: { type: 'string' },\r",
+									"                status: { type: 'string' }\r",
+									"            },\r",
+									"            required: ['id', 'name', 'email', 'gender', 'status']\r",
+									"        }\r",
+									"    };\r",
+									"    \r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Emails are valid format\", function () {\r",
+									"    response.forEach(user => {\r",
+									"        pm.expect(user.email).to.match(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/);\r",
+									"    })\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Gender values are correct\", function () {\r",
+									"    response.forEach(user => {\r",
+									"        pm.expect(user.gender).to.be.oneOf(['male', 'female'])\r",
+									"    })\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Status value are correct\", function() {\r",
+									"    response.forEach(user => {\r",
+									"        pm.expect(user.status).to.be.oneOf([\"active\", \"inactive\"])\r",
+									"    })\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Email are unique in this page\", function() {\r",
+									"    const emails = response.map(user => user.email)\r",
+									"    const UniqueEmails = new Set(emails)\r",
+									"    pm.expect(UniqueEmails.size).to.equal(emails.length)\r",
+									"})\r",
+									"\r",
+									"pm.test(\"IDs are unique and numeric in this page\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"    const IDs = response.map(user => user.id);\r",
+									"    const UniqueIDs = new Set(IDs);\r",
+									"    \r",
+									"    pm.expect(UniqueIDs.size).to.equal(IDs.length);\r",
+									"    IDs.forEach(ID => {pm.expect(ID).to.be.a('number');});\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Content-Type is application/json\", function(){\r",
+									"    let ContentType = pm.response.headers.get(\"Content-Type\")\r",
+									"    pm.expect(ContentType).to.include(\"application/json\")\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET users (with Token)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Status Code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than 1 second\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"pm.test(\"Response matches schema\", function () {\r",
+									"    const schema = {\r",
+									"        type: 'array',\r",
+									"        items: {\r",
+									"            type: 'object',\r",
+									"            properties: {\r",
+									"                id: { type: 'integer' },\r",
+									"                name: { type: 'string' },\r",
+									"                email: { type: 'string' },\r",
+									"                gender: { type: 'string' },\r",
+									"                status: { type: 'string' }\r",
+									"            },\r",
+									"            required: ['id', 'name', 'email', 'gender', 'status']\r",
+									"        }\r",
+									"    };\r",
+									"    \r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Emails are valid format\", function () {\r",
+									"    response.forEach(user => {\r",
+									"        pm.expect(user.email).to.match(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/);\r",
+									"    })\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Gender values are correct\", function () {\r",
+									"    response.forEach(user => {\r",
+									"        pm.expect(user.gender).to.be.oneOf(['male', 'female'])\r",
+									"    })\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Status value are correct\", function() {\r",
+									"    response.forEach(user => {\r",
+									"        pm.expect(user.status).to.be.oneOf([\"active\", \"inactive\"])\r",
+									"    })\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Email are unique in this page\", function() {\r",
+									"    const emails = response.map(user => user.email)\r",
+									"    const UniqueEmails = new Set(emails)        // Here \"UniqueEmails\" is now an array, because .map method returns an array.\r",
+									"    pm.expect(UniqueEmails.size).to.equal(emails.length)\r",
+									"})\r",
+									"\r",
+									"pm.test(\"IDs are unique and numeric in this page\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"    const IDs = response.map(user => user.id); // Here \"IDs\" is now an array, because .map method returns an array.\r",
+									"    const UniqueIDs = new Set(IDs);\r",
+									"    \r",
+									"    pm.expect(UniqueIDs.size).to.equal(IDs.length);\r",
+									"\r",
+									"    IDs.forEach(ID => {pm.expect(ID).to.be.a('number');});\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Content-Type is application/json\", function(){\r",
+									"    let ContentType = pm.response.headers.get(\"Content-Type\")\r",
+									"    pm.expect(ContentType).to.include(\"application/json\")\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Create USER (Positive)",
+			"item": [
+				{
+					"name": "Create user with valid unique data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"    let jsonData = pm.response.json()\r",
+									"    pm.environment.set(\"previous_id\", jsonData.id)\r",
+									"    \r",
+									"    pm.globals.set(\"user_id\", jsonData.id)\r",
+									"\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(500)\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Request Body items equal to Response Body\", function(){\r",
+									"    const RequestBody = JSON.parse(pm.request.body.raw);\r",
+									"    const ResponseBody = pm.response.json();\r",
+									"    \r",
+									"    for(let item in RequestBody){\r",
+									"        pm.expect(RequestBody[item]).to.eql(ResponseBody[item])\r",
+									"    }\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Response Body should contain correct fields\", function() {\r",
+									"    const jsonData = pm.response.json()\r",
+									"    pm.expect(jsonData).to.have.property(\"id\")\r",
+									"    pm.expect(jsonData).to.have.property(\"name\")\r",
+									"    pm.expect(jsonData).to.have.property(\"email\")\r",
+									"    pm.expect(jsonData).to.have.property(\"gender\")\r",
+									"    pm.expect(jsonData).to.have.property(\"status\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body field types are correct\", function(){\r",
+									"    const jsonData = pm.response.json()\r",
+									"    pm.expect(jsonData.id).to.be.a(\"number\")\r",
+									"    pm.expect(jsonData.name).to.be.a(\"string\")\r",
+									"    pm.expect(jsonData.email).to.be.a(\"string\")\r",
+									"    pm.expect(jsonData.gender).to.be.a(\"string\")\r",
+									"    pm.expect(jsonData.status).to.be.a(\"string\")\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Content Type header included\", function(){\r",
+									"    const CntTypHeader = pm.response.headers.get(\"Content-Type\")\r",
+									"    pm.expect(CntTypHeader).to.include(\"application/json\")\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Email format should be correct\", function(){\r",
+									"    const emailField = pm.response.json().email\r",
+									"    pm.expect(emailField).to.match(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/)\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Gender values are correct\", function(){\r",
+									"    const genderField = pm.response.json().gender\r",
+									"    pm.expect(genderField).to.be.oneOf([\"male\", \"female\"])\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Status values are correct\", function () {\r",
+									"    const statusField = pm.response.json().status\r",
+									"    pm.expect(statusField).to.be.oneOf([\"active\", \"inactive\"])\r",
+									"})\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Test12\",\r\n  \"email\": \"testwow1123333333331@example.com\",\r\n  \"gender\": \"female\",\r\n  \"status\": \"active\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create user with different ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"let newID = parseInt(pm.response.json().id)\r",
+									"let previousID = parseInt(pm.environment.get(\"previous_id\"))\r",
+									"\r",
+									"pm.test(\"New user ID is different from the previous one\", function () {\r",
+									"    pm.expect(newID).not.to.equal(previousID)\r",
+									"})\r",
+									"\r",
+									"pm.environment.set(\"previous_user_id\", newID);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"John QA\",\r\n  \"email\": \"johnd991@example.com\",\r\n  \"gender\": \"male\",\r\n  \"status\": \"active\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Create USER (Negative)",
+			"item": [
+				{
+					"name": "Create user with duplicate email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 422\", function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Duplicate email error is shown\", function(){\r",
+									"    const body = pm.response.json()\r",
+									"    const EmailError = body.find(error => error.field === \"email\")\r",
+									"\r",
+									"    pm.expect(EmailError).to.not.be.undefined\r",
+									"    pm.expect(EmailError.message).to.eql(\"has already been taken\")\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Hashem QA\",\r\n  \"email\": \"hashem.qa1.984@example.com\",\r\n  \"gender\": \"male\",\r\n  \"status\": \"active\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create user with missing fields",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 422 for missing fields\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(422);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Returns field-level errors\", function () {\r",
+									"    const body = pm.response.json();\r",
+									"    const requiredFields = [\"name\", \"gender\", \"status\"];\r",
+									"    requiredFields.forEach(field => {\r",
+									"        const error = body.find(err => err.field === field);\r",
+									"        pm.expect(error).to.not.be.undefined;\r",
+									"    });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"hashem.qa.98412@example.com\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Update USER (Positive)",
+			"item": [
+				{
+					"name": "Update Whole Body",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is acceptable\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000); // < 1s\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Request Body items equal to Response Body\", function(){\r",
+									"    const RequestBody = JSON.parse(pm.request.body.raw);\r",
+									"    const ResponseBody = pm.response.json();\r",
+									"    \r",
+									"    for(let item in RequestBody){\r",
+									"        pm.expect(RequestBody[item]).to.eql(ResponseBody[item])\r",
+									"    }\r",
+									"})\r",
+									"\r",
+									"const schema = {\r",
+									"    type: \"object\",\r",
+									"    properties: {\r",
+									"        email: { type: \"string\" },\r",
+									"        name: { type: \"string\" },\r",
+									"        gender: { type: \"string\" },\r",
+									"        status: { type: \"string\" },\r",
+									"        id: { type: \"integer\" }\r",
+									"    },\r",
+									"    required: [\"email\", \"name\", \"gender\", \"status\", \"id\"]\r",
+									"};\r",
+									"\r",
+									"pm.test(\"Response matches the schema\", function () {\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is application/json\", function () {\r",
+									"    let CntTypHeader = pm.response.headers.get(\"Content-Type\");\r",
+									"    pm.expect(CntTypHeader).to.include(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body Content Check\", function () {\r",
+									"    let body = pm.response.json();\r",
+									"    pm.expect(body).to.have.property(\"email\");\r",
+									"    pm.expect(body).to.have.property(\"name\");\r",
+									"    pm.expect(body).to.have.property(\"gender\");\r",
+									"    pm.expect(body).to.have.property(\"status\");\r",
+									"    pm.expect(body).to.have.property(\"id\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\r\n        \"name\": \"Test1\",\r\n        \"email\": \"test1@example.com\",\r\n        \"gender\": \"female\",\r\n        \"status\": \"active\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/{{user_id}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{user_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Email Only",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Email in response matches sent email\", () => {\r",
+									"    const RequestBody = JSON.parse(pm.request.body.raw)\r",
+									"    const ExpectedEmail = RequestBody.email\r",
+									"\r",
+									"    const ResponseBody = pm.response.json()\r",
+									"    const ActualBody = ResponseBody.email\r",
+									"    \r",
+									"    pm.expect(ActualBody).to.equal(ExpectedEmail)\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is acceptable\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000); // < 1s\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is application/json\", function () {\r",
+									"    const CntTypHeader = pm.response.headers.get(\"Content-Type\");\r",
+									"    pm.expect(CntTypHeader).to.include(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"const schema = {\r",
+									"    type: \"object\",\r",
+									"    properties: {\r",
+									"        email: { type: \"string\" },\r",
+									"        name: { type: \"string\" },\r",
+									"        gender: { type: \"string\" },\r",
+									"        status: { type: \"string\" },\r",
+									"        id: { type: \"integer\" }\r",
+									"    },\r",
+									"    required: [\"email\", \"name\", \"gender\", \"status\", \"id\"]\r",
+									"};\r",
+									"\r",
+									"pm.test(\"Response matches the schema\", function () {\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response Body Content\", function(){\r",
+									"    const body = pm.response.json()\r",
+									"    pm.expect(body).to.have.property(\"email\")\r",
+									"    pm.expect(body).to.have.property(\"id\")\r",
+									"    pm.expect(body).to.have.property(\"name\")\r",
+									"    pm.expect(body).to.have.property(\"gender\")\r",
+									"    pm.expect(body).to.have.property(\"status\")\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"cigarettes@exmaple.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/{{user_id}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{user_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Update USER (Negative)",
+			"item": [
+				{
+					"name": "Update with Existing Email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 422\", function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"})\r",
+									"pm.test(\"Existing Email Error\", function() {\r",
+									"    const response = pm.response.json();\r",
+									"\r",
+									"    // Check if the response is an array and contains the expected error message\r",
+									"    pm.expect(response).to.be.an('array').that.is.not.empty;\r",
+									"    response.forEach(error => {\r",
+									"        pm.expect(error).to.have.property('field', 'email');\r",
+									"        pm.expect(error).to.have.property('message', 'has already been taken');\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response has the correct Content-Type header\", function () {\r",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"khan_krishnadas@moore-beatty.example\",\r\n    \"name\": \"Anything\",\r\n    \"gender\": \"male\",\r\n    \"status\": \"inactive\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/{{user_id}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{user_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update with Invalid Email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 422\", function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response is an array with the expected structure\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"\r",
+									"    pm.expect(responseData).to.be.an('array');\r",
+									"    responseData.forEach(error => {\r",
+									"        pm.expect(error).to.have.property('field');\r",
+									"        pm.expect(error).to.have.property('message', 'is invalid');\r",
+									"    })\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check 'is invalid' for email field\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('array').that.is.not.empty;\r",
+									"    responseData.forEach(function(item) {\r",
+									"        pm.expect(item.message).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");\r",
+									"    });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"sanjay_nair@@@@@@thompson.test\",\r\n    \"name\": \"Anything\",\r\n    \"gender\": \"male\",\r\n    \"status\": \"inactive\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/{{user_id}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{user_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update with Numerical Email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 422\", function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is an array with the expected structure\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"\r",
+									"    pm.expect(responseData).to.be.an('array');\r",
+									"    responseData.forEach(error => {\r",
+									"        pm.expect(error).to.have.property('field');\r",
+									"        pm.expect(error).to.have.property('message', 'is invalid');\r",
+									"    })\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check 'is invalid' for email field\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('array').that.is.not.empty;\r",
+									"    responseData.forEach(function(item) {\r",
+									"        pm.expect(item.message).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");\r",
+									"    });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"911\",\r\n    \"name\": \"Anything\",\r\n    \"gender\": \"male\",\r\n    \"status\": \"inactive\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/{{user_id}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{user_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Delete USER",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/users/7995911",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"users",
+						"7995911"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -1,0 +1,729 @@
+{
+	"info": {
+		"_postman_id": "610d0c08-ee25-4907-a050-e7a0652762da",
+		"name": "POSTS Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40960772"
+	},
+	"item": [
+		{
+			"name": "Positive",
+			"item": [
+				{
+					"name": "Create a Post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(500);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Response body contains correct data\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"id\")\r",
+									"    pm.expect(jsonData).to.have.property(\"user_id\")\r",
+									"    pm.expect(jsonData).to.have.property(\"title\")\r",
+									"    pm.expect(jsonData).to.have.property(\"body\")\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Schema Check\", function() {\r",
+									"    const schema = {\r",
+									"        \"type\": \"object\",\r",
+									"        \"properties\": {\r",
+									"            \"id\": { \"type\": \"integer\" },\r",
+									"            \"user_id\": { \"type\": \"integer\" },\r",
+									"            \"title\": { \"type\": \"string\" },\r",
+									"            \"body\": { \"type\": \"string\" }\r",
+									"        },\r",
+									"        \"required\": [\"user_id\", \"title\", \"body\"]\r",
+									"    };\r",
+									"    pm.expect(pm.response.json()).to.have.jsonSchema(schema);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Field data types are correct\", function () {\r",
+									"    const res = pm.response.json();\r",
+									"    pm.expect(res.id).to.be.a(\"number\");\r",
+									"    pm.expect(res.user_id).to.be.a(\"number\");\r",
+									"    pm.expect(res.title).to.be.a(\"string\");\r",
+									"    pm.expect(res.body).to.be.a(\"string\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is application/json\", function(){\r",
+									"    let ContentType = pm.response.headers.get(\"Content-Type\")\r",
+									"    pm.expect(ContentType).to.include(\"application/json\")\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Post ID is present and valid\", function () {\r",
+									"    const id = pm.response.json().id;\r",
+									"    pm.expect(id).to.not.be.null;\r",
+									"    pm.expect(id).to.be.above(0);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Request Body items same as Response Body items\", function () {\r",
+									"    let RequestBody = JSON.parse(pm.request.body.raw);\r",
+									"    let ResponseBody = pm.response.json();\r",
+									"\r",
+									"    for (let item in RequestBody) {\r",
+									"        if (item === \"id\") continue;\r",
+									"        pm.expect(RequestBody[item]).to.eql(ResponseBody[item]);\r",
+									"    }\r",
+									"})\r",
+									"\r",
+									"\r",
+									"pm.test(\"Title must be a non-empty string\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.title).to.exist.and.to.be.a('string')\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Validate user_id and id are non-negative integers\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.user_id).to.be.a('number').and.to.be.at.least(0, \"user_id should be a non-negative integer\");\r",
+									"    pm.expect(responseData.id).to.be.a('number').and.to.be.at.least(0, \"id should be a non-negative integer\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.globals.set(\"Post_id\", pm.response.json().id);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user_id\": 7997882,\r\n    \"title\": \"asdsadqwe\",\r\n    \"body\": \"You can Listen to DraconianDraconianDraconian\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/posts",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve Posts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status Code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than 1 second\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"IDs are unique in this page\", function() {\r",
+									"    const response = pm.response.json(); \r",
+									"    const ids = response.map(post => post.id);\r",
+									"    const UniqueIDs = new Set(ids);\r",
+									"    pm.expect(UniqueIDs.size).to.equal(ids.length);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type is application/json\", function(){\r",
+									"    let ContentType = pm.response.headers.get(\"Content-Type\")\r",
+									"    pm.expect(ContentType).to.include(\"application/json\")\r",
+									"})\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"const schema = {\r",
+									"    type: \"array\",\r",
+									"    items: {\r",
+									"        type: \"object\",\r",
+									"        properties: {\r",
+									"            id: { type: \"integer\" },\r",
+									"            user_id: { type: \"integer\" },\r",
+									"            title: { type: \"string\" },\r",
+									"            body: { type: \"string\" }\r",
+									"        },\r",
+									"        required: [\"id\", \"user_id\", \"title\", \"body\"]\r",
+									"    }\r",
+									"};\r",
+									"\r",
+									"pm.test(\"Response schema is valid\", function() {\r",
+									"    pm.expect(tv4.validate(response, schema)).to.be.true;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}posts",
+							"host": [
+								"{{baseURL}}posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve Selected Post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status Code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than 1 second\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Content-Type is application/json\", function () {\r",
+									"    let ContentType = pm.response.headers.get(\"Content-Type\")\r",
+									"    pm.expect(ContentType).to.include(\"application/json\")\r",
+									"})\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"const schema = {\r",
+									"    type: \"object\",\r",
+									"    properties: {\r",
+									"        id: { type: \"integer\" },\r",
+									"        user_id: { type: \"integer\" },\r",
+									"        title: { type: \"string\" },\r",
+									"        body: { type: \"string\" }\r",
+									"    },\r",
+									"    required: [\"id\", \"user_id\", \"title\", \"body\"]\r",
+									"};\r",
+									"\r",
+									"pm.test(\"Response schema is valid\", function () {\r",
+									"    pm.expect(tv4.validate(response, schema)).to.be.true;\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}posts/{{Post_id}}",
+							"host": [
+								"{{baseURL}}posts"
+							],
+							"path": [
+								"{{Post_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Full Request Body",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than 500ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(500);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response Body items is Same as Request Body items\", function () {\r",
+									"    let RequestBody = JSON.parse(pm.request.body.raw);\r",
+									"    let ResponseBody = pm.response.json();\r",
+									"\r",
+									"    for (let item in RequestBody) {\r",
+									"        pm.expect(ResponseBody[item]).to.equal(RequestBody[item]);\r",
+									"    }\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Response has the required fields\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData).to.have.all.keys('user_id', 'title', 'body', 'id');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Title must be a non-empty string\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.title).to.exist.and.to.be.a('string')\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate user_id and id are non-negative integers\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.user_id).to.be.a('number').and.to.be.at.least(0, \"user_id should be a non-negative integer\");\r",
+									"    pm.expect(responseData.id).to.be.a('number').and.to.be.at.least(0, \"id should be a non-negative integer\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user_id\": 7997882,\r\n    \"title\": \"Freedom of Syria\",\r\n    \"body\": \"On the 8th of December, the Assad Regime has offically fall and Syria is back for SYRIANS!!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/posts/{{Post_id}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"posts",
+								"{{Post_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Title Field",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than 500ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(500);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Title must be a non-empty string\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.title).to.exist.and.to.be.a('string')\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"BBE!###@\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/posts/{{Post_id}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"posts",
+								"{{Post_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Negative",
+			"item": [
+				{
+					"name": "Create a Post with No Title",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status Code is 422\", function(){\r",
+									"    pm.response.to.have.status(422);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Title Field is Blank Message\", function(){\r",
+									"    let messagefield = pm.response.json()[0].message  // [0] ==> becuase the send body is an array of one object element\r",
+									"    pm.expect(messagefield).to.equal(\"can't be blank\")\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user_id\": 7997882,\r\n    \"body\": \"You can Listen to DraconianDraconianDraconian\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/posts",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a Post with No Body",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status Code is 422\", function(){\r",
+									"    pm.response.to.have.status(422);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body Field is Blank Message\", function(){\r",
+									"    let messagefield = pm.response.json()[0].message  // [0] ==> becuase the send body is an array of one object element\r",
+									"    pm.expect(messagefield).to.equal(\"can't be blank\")\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user_id\": 7997882,\r\n    \"title\": \"WOW\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/posts",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a Comment with No Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401 Unauthorized\", function(){\r",
+									"    pm.response.to.have.status(401);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Correct Authentication Message\", function(){\r",
+									"    pm.expect(pm.response.json()).to.have.property(\"message\", \"Authentication failed\")\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user_id\": 7997883,\r\n    \"title\": \"This is a Title\",\r\n    \"body\": \"This is a Body.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/posts",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"posts"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Delete a Post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {\r",
+							"    pm.response.to.have.status(204);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response Body is Empty\", function(){\r",
+							"    pm.expect(pm.response.text()).to.eql('');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}posts/{{Post_id}}",
+					"host": [
+						"{{baseURL}}posts"
+					],
+					"path": [
+						"{{Post_id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

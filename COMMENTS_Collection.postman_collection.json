@@ -1,0 +1,780 @@
+{
+	"info": {
+		"_postman_id": "0cb4ede0-b667-498d-9edc-bd33e92095f1",
+		"name": "COMMENTS Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40960772"
+	},
+	"item": [
+		{
+			"name": "Positive",
+			"item": [
+				{
+					"name": "Retrieve Comments",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time less than 1 seconds\", function(){\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content Type Header Exist\", function(){\r",
+									"    let header = pm.response.headers.get(\"Content-Type\");\r",
+									"    pm.expect(header).to.include(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"IDs are unique\", function(){\r",
+									"    let response = pm.response.json();\r",
+									"    let IDs = response.map(item => item.id);\r",
+									"    let UniqueIDs = new Set(IDs);\r",
+									"    pm.expect(UniqueIDs.size).to.equal(IDs.length);\r",
+									"});\r",
+									"\r",
+									"const schema = {\r",
+									"    type: \"array\",\r",
+									"    items: {\r",
+									"        type: \"object\",\r",
+									"        properties: {\r",
+									"            id: { type: \"integer\" },\r",
+									"            post_id: { type: \"integer\" },\r",
+									"            name: { type: \"string\" },\r",
+									"            email: { type: \"string\", format: \"email\" },\r",
+									"            body: { type: \"string\" }\r",
+									"        },\r",
+									"        required: [\"id\", \"post_id\", \"name\", \"email\", \"body\"]\r",
+									"    }\r",
+									"};\r",
+									"\r",
+									"pm.test(\"Response schema is valid\", function() {\r",
+									"    let response = pm.response.json();\r",
+									"    pm.expect(tv4.validate(response, schema)).to.be.true;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Emails are in Valid Format\", function(){\r",
+									"    let response = pm.response.json();\r",
+									"    response.forEach(user => {\r",
+									"        pm.expect(user.email).to.match(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/);\r",
+									"    })\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Name field is string\", function(){\r",
+									"    let response = pm.response.json()\r",
+									"    response.forEach(user => {\r",
+									"        pm.expect(user.name).to.be.a('string')\r",
+									"    })\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body field is string\", function(){\r",
+									"    let response = pm.response.json()\r",
+									"    response.forEach(user => {\r",
+									"        pm.expect(user.body).to.be.a('string')\r",
+									"    })\r",
+									"})\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/comments",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve Selected Comment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time less than 1 seconds\", function(){\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content Type Header Exist\", function(){\r",
+									"    let header = pm.response.headers.get(\"Content-Type\");\r",
+									"    pm.expect(header).to.include(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Emails are in Valid Format\", function(){\r",
+									"    let response = pm.response.json();\r",
+									"    pm.expect(response.email).to.match(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Name field is string\", function(){\r",
+									"    let response = pm.response.json()\r",
+									"    pm.expect(response.name).to.be.a('string')\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body field is string\", function(){\r",
+									"    let response = pm.response.json()\r",
+									"    pm.expect(response.body).to.be.a('string')\r",
+									"})\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/comments/{{Comment_id}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"comments",
+								"{{Comment_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a Comment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"Comment_id\", pm.response.json().id);\r",
+									"\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than 1 second\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response Body same as Request Body\", function(){\r",
+									"    let request = JSON.parse(pm.request.body.raw);\r",
+									"    let response = pm.response.json();\r",
+									"    \r",
+									"    for(let item in request){\r",
+									"        if (item === \"id\") continue;\r",
+									"        pm.expect(response[item]).to.eql(request[item]);\r",
+									"    }\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response matches schema\", function() {\r",
+									"    const response = pm.response.json();\r",
+									"    const schema = {\r",
+									"        type: \"object\",\r",
+									"        properties: {\r",
+									"            id: { type: \"number\" },\r",
+									"            post_id: { type: \"number\" },\r",
+									"            name: { type: \"string\" },\r",
+									"            email: { type: \"string\" },\r",
+									"            body: { type: \"string\" }\r",
+									"        },\r",
+									"        required: [\"id\", \"post_id\", \"name\", \"email\", \"body\"]\r",
+									"    };\r",
+									"    pm.expect(response).to.have.jsonSchema(schema);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Comment ID exists and is a number\", function () {\r",
+									"    let response = pm.response.json();\r",
+									"    pm.expect(response).to.have.property(\"id\");\r",
+									"    pm.expect(response.id).to.be.a(\"number\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Email is in Valid Format\", function(){\r",
+									"    let response = pm.response.json();\r",
+									"    pm.expect(response.email).to.match(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/)\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"post_id\": 220909,\r\n        \"name\": \"My name is YO\",\r\n        \"email\": \"Yo@Weee.com\",\r\n        \"body\": \"Yo I did not ask for this!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/comments",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Full Body",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(500);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Response body same is Request Body\", function () {\r",
+									"    let RequestBody = JSON.parse(pm.request.body.raw)\r",
+									"    let ResponseBody = pm.response.json()\r",
+									"    \r",
+									"    for(let item in RequestBody){\r",
+									"        if(item == \"id\") continue;\r",
+									"        pm.expect(ResponseBody[item]).to.eql(RequestBody[item])\r",
+									"    }\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Response body matches schema\", function() {\r",
+									"    const responseBody = pm.response.json();\r",
+									"    const schema = {\r",
+									"        type: \"object\",\r",
+									"        properties: {\r",
+									"            post_id: { type: \"integer\" },\r",
+									"            name: { type: \"string\" },\r",
+									"            email: { type: \"string\" },\r",
+									"            body: { type: \"string\" },\r",
+									"            id: { type: \"integer\" }\r",
+									"        },\r",
+									"        required: [\"post_id\", \"name\", \"email\", \"body\", \"id\"]\r",
+									"    };\r",
+									"\r",
+									"    pm.expect(responseBody).to.have.jsonSchema(schema);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Comment ID exists and is a number\", function () {\r",
+									"    let response = pm.response.json();\r",
+									"    pm.expect(response).to.have.property(\"id\");\r",
+									"    pm.expect(response.id).to.be.a(\"number\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Email is in Valid Format\", function(){\r",
+									"    let response = pm.response.json();\r",
+									"    pm.expect(response.email).to.match(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/)\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"post_id\": 220909,\r\n    \"name\": \"Sleep\",\r\n    \"email\": \"Sleep@10PM.com\",\r\n    \"body\": \"Fix ur sleep schedule bruh.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/comments/{{Comment_id}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"comments",
+								"{{Comment_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Negative",
+			"item": [
+				{
+					"name": "Create a Comment with No Email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 422\", function(){\r",
+									"    pm.response.to.have.status(422);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Response body contains error message for email field\", function(){\r",
+									"    var MessageField = pm.response.json()[0].message\r",
+									"    pm.expect(MessageField).to.eql(\"can't be blank, is invalid\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"post_id\": 220909,\r\n        \"name\": \"Hashem Mohammed\",\r\n        \"body\": \"I do not want to work at this place.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/comments",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a Comment with No Name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 422\", function(){\r",
+									"    pm.response.to.have.status(422);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Response body contains error message for email field\", function(){\r",
+									"    var NameField = pm.response.json()[0].message\r",
+									"    pm.expect(NameField).to.eql(\"can't be blank\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"post_id\": 220909,\r\n        \"email\": \"hashemtest@example.com\",\r\n        \"body\": \"I do not want to work at this place.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/comments",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a Comment with No body",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 422\", function(){\r",
+									"    pm.response.to.have.status(422);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Response body contains error message for email field\", function(){\r",
+									"    var BodyField = pm.response.json()[0].message\r",
+									"    pm.expect(BodyField).to.eql(\"can't be blank\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"post_id\": 220909,\r\n        \"name\": \"Hashem Mohammed\",\r\n        \"email\": \"hashemtest@example.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/comments",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve Non-Existent Comment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function(){\r",
+									"    pm.response.to.have.status(404)\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Correct Message in Response Body\", function(){\r",
+									"    let response = pm.response.json()\r",
+									"    pm.expect(response.message).to.include(\"Resource not found\") // here the response body is not an array so we access the message directly\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/comments/{{Comment_id}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"comments",
+								"{{Comment_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve Comment with No Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code should be 401 NOT AUTHORIZED\", function(){\r",
+									"    pm.response.to.have.status(401)\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Correct Message in Response Body\", function(){\r",
+									"    let response = pm.response.json()\r",
+									"    pm.expect(response.message).to.include(\"not authorized\") // here the response body is not an array so we access the message directly\r",
+									"})\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/comments/157701",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"comments",
+								"157701"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Delete a Comment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 204\", function () {\r",
+							"    pm.expect(pm.response.code).to.eql(204);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response time is less than 1 second\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response has no content for successful DELETE request\", function () {\r",
+							"    pm.expect(pm.response.code).to.equal(204);\r",
+							"    pm.expect(pm.response.text()).to.be.empty;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body is empty\", function () {\r",
+							"    pm.expect(pm.response.text()).to.eql('');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/comments/{{Comment_id}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"comments",
+						"{{Comment_id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -1,0 +1,654 @@
+{
+	"info": {
+		"_postman_id": "d6cc70bc-f406-4803-99a4-7bd9f1835b47",
+		"name": "TODOS Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40960772"
+	},
+	"item": [
+		{
+			"name": "Positive",
+			"item": [
+				{
+					"name": "Retrieve Todos",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status Code is 200\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response Time Less Than 1 Second\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content Type Header\", function(){\r",
+									"    let ContentType = pm.response.headers.get(\"Content-Type\");\r",
+									"    pm.expect(ContentType).to.include(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response Schema Validation\", function() {\r",
+									"    const schema = {\r",
+									"        type: \"array\",\r",
+									"        items: {\r",
+									"            type: \"object\",\r",
+									"            properties: {\r",
+									"                id: { type: \"integer\" },\r",
+									"                user_id: { type: \"integer\" },\r",
+									"                title: { type: \"string\" },\r",
+									"                due_on: { type: \"string\", format: \"date-time\" },\r",
+									"                status: { type: \"string\", enum: [\"pending\", \"completed\"] }\r",
+									"            },\r",
+									"            required: [\"id\", \"user_id\", \"title\", \"due_on\", \"status\"]\r",
+									"        }\r",
+									"    };\r",
+									"    pm.expect(tv4.validate(response, schema)).to.be.true;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"All IDs are unique\", function(){\r",
+									"    let IDs = response.map(item => item.id);\r",
+									"    let uniqueIDs = new Set(IDs);\r",
+									"    pm.expect(uniqueIDs.size).to.equal(IDs.length);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Title is a string\", function(){\r",
+									"    response.forEach(item => {\r",
+									"        pm.expect(item.title).to.be.a('string');\r",
+									"    });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/todos",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"todos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve Selected Todo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status Code is 200\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response Time Less Than 1 Second\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content Type Header\", function(){\r",
+									"    let ContentType = pm.response.headers.get(\"Content-Type\");\r",
+									"    pm.expect(ContentType).to.include(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response Schema Validation\", function() {\r",
+									"    pm.expect(response).to.have.all.keys('id', 'user_id', 'title', 'due_on', 'status');\r",
+									"\r",
+									"    pm.expect(response.id).to.be.a('number');\r",
+									"    pm.expect(response.user_id).to.be.a('number');\r",
+									"    pm.expect(response.title).to.be.a('string');\r",
+									"    pm.expect(response.due_on).to.be.a('string'); // ISO 8601 date format\r",
+									"    pm.expect(response.status).to.be.a('string');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Title is a string\", function(){\r",
+									"    let response = pm.response.json()\r",
+									"    pm.expect(response.title).to.be.a('string');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status Expected values\", function(){\r",
+									"    let actual_status = pm.response.json().status\r",
+									"    let expected_status = [\"pending\", \"completed\"]\r",
+									"    pm.expect(actual_status).to.be.oneOf(expected_status)\r",
+									"})\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/todos/{{Todo_id}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"todos",
+								"{{Todo_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a Todo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"Todo_id\", pm.response.json().id)\r",
+									"\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201)\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Response Time Less than 1 Second\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000)\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Response body same as Request Body\",function () {\r",
+									"    let RequestBody = JSON.parse(pm.request.body.raw)\r",
+									"    let ResponseBody = pm.response.json()\r",
+									"\r",
+									"    for(let item in RequestBody){\r",
+									"        pm.expect(ResponseBody[item]).to.eql(RequestBody[item])\r",
+									"    }\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Content Type Header\", function(){\r",
+									"    let ContentType = pm.response.headers.get(\"Content-Type\");\r",
+									"    pm.expect(ContentType).to.include(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response body schema validation\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"    pm.expect(response).to.have.all.keys('id', 'user_id', 'title', 'due_on', 'status');\r",
+									"    pm.expect(response.id).to.be.a('number');\r",
+									"    pm.expect(response.user_id).to.be.a('number');\r",
+									"    pm.expect(response.title).to.be.a('string');\r",
+									"    pm.expect(response.due_on).to.be.a('string');\r",
+									"    pm.expect(response.status).to.be.a('string');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Todo ID exist and numerical\", function(){\r",
+									"    let response = pm.response.json();\r",
+									"    pm.expect(response).to.have.a.property(\"id\")\r",
+									"    pm.expect(response.id).to.be.a(\"number\")\r",
+									"})\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"user_id\": 8005641,\r\n        \"title\": \"Continue Projects\",\r\n        \"due_on\": \"2025-07-25T00:00:00.000+05:30\",\r\n        \"status\": \"pending\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/todos",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"todos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Full Body",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200)\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Response Time Less than 1 Second\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000)\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Response body same as Request Body\",function () {\r",
+									"    let RequestBody = JSON.parse(pm.request.body.raw)\r",
+									"    let ResponseBody = pm.response.json()\r",
+									"\r",
+									"    for(let item in RequestBody){\r",
+									"        if(item == \"id\") continue;\r",
+									"        pm.expect(ResponseBody[item]).to.eql(RequestBody[item])\r",
+									"    }\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Content Type Header\", function(){\r",
+									"    let ContentType = pm.response.headers.get(\"Content-Type\");\r",
+									"    pm.expect(ContentType).to.include(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response body schema validation\", function () {\r",
+									"    const response = pm.response.json();\r",
+									"    pm.expect(response).to.have.all.keys('id', 'user_id', 'title', 'due_on', 'status');\r",
+									"    pm.expect(response.id).to.be.a('number');\r",
+									"    pm.expect(response.user_id).to.be.a('number');\r",
+									"    pm.expect(response.title).to.be.a('string');\r",
+									"    pm.expect(response.due_on).to.be.a('string');\r",
+									"    pm.expect(response.status).to.be.a('string');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Todo ID exist and numerical\", function(){\r",
+									"    let response = pm.response.json();\r",
+									"    pm.expect(response).to.have.a.property(\"id\")\r",
+									"    pm.expect(response.id).to.be.a(\"number\")\r",
+									"})\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"user_id\": 8005641,\r\n        \"title\": \"New Job\",\r\n        \"due_on\": \"2025-07-29T00:00:00.000+05:30\",\r\n        \"status\": \"completed\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/todos/{{Todo_id}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"todos",
+								"{{Todo_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Negative",
+			"item": [
+				{
+					"name": "Create a Todo with No Title",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response Code is 422\", function(){\r",
+									"    pm.response.to.have.status(422);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response Time is less Than 1 Second\", function(){\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Response body contains error message for Title Field\", function(){\r",
+									"    let MessageField = pm.response.json()[0].message\r",
+									"    pm.expect(MessageField).to.include(\"can't be blank\")\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"user_id\": 8005641,\r\n        \"due_on\": \"2025-07-25T00:00:00.000+05:30\",\r\n        \"status\": \"pending\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/todos",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"todos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a Todo with No Due On",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response Code is 422\", function(){\r",
+									"    pm.response.to.have.status(422);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response Time is less Than 1 Second\", function(){\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Response body contains error message for Due On field\", function(){\r",
+									"    let DueOnField = pm.response.json()[0].message\r",
+									"    pm.expect(DueOnField).to.include(\"can't be blank\")\r",
+									"})\r",
+									"\r",
+									"// YAAAAAY its finally FAILING, my first BUG Found in this Project!!\r",
+									"// You Can't create a Todo without providing the due on date, thats why its failing.. its\r",
+									"// creating the todo with no due date and replace it with NULL !!"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"user_id\": 8005641,\r\n        \"title\" : \"Welcome Test\",\r\n        \"status\": \"pending\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/todos",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"todos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve Non-Existent Todo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function(){\r",
+									"    pm.response.to.have.status(404)\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Correct Message in Response Body\", function(){\r",
+									"    let response = pm.response.json()\r",
+									"    pm.expect(response.message).to.include(\"Resource not found\") // here the response body is not an array so we access the message directly\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/todos/845298",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"todos",
+								"845298"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve a Todo with No Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401 Not authorized\", function(){\r",
+									"    pm.response.to.have.status(401)\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Correct Message in Response Body\", function(){\r",
+									"    let response = pm.response.json()\r",
+									"    pm.expect(response.message).to.include(\"not authorized\") // here the response body is not an array so we access the message directly\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/todos",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"todos"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Delete a Todo",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{Token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/todos/84525",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"todos",
+						"84525"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

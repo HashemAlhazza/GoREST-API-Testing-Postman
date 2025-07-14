@@ -1,0 +1,45 @@
+{
+	"id": "6838486a-85d2-4c53-8fad-e2c16b422793",
+	"values": [
+		{
+			"key": "baseURL",
+			"value": "\nhttps://gorest.co.in/public/v2/",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "Token",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "user_id",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "Post_id",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "Comment_id",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "Todo_id",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		}
+	],
+	"name": "Globals",
+	"_postman_variable_scope": "globals",
+	"_postman_exported_at": "2025-07-14T20:23:47.937Z",
+	"_postman_exported_using": "Postman/11.53.5"
+}
