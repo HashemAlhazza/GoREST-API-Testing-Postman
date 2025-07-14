@@ -19,7 +19,7 @@ The API is split into **four logical collections**:
 | `Comments_Postman_Collection.json`| Test suite for `/comments` endpoint |
 | `Todos_Postman_Collection.json`   | Test suite for `/todos` endpoint    |
 | `GoREST_Environment.json`         | Environment config (baseURL, token) |
-| `Test_Results_Run1.json` *(opt)* | Sample test result export           |
+| `workspace.postman_globals.json`  | Globale variables used in endpoints
 
 ---
 
